@@ -11,5 +11,5 @@ export const getPopular = async (page: number) => {
   });
   const data = res.data;
   const results = data["results"];
-  console.log(results);
+  return results;
 };

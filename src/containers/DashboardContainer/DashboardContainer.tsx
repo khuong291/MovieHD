@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import { Layout, Menu, Icon } from "antd";
 import Avatar from "./components/Avatar";
 import PopularContainer from "../Popular/PopularContainer";
 
@@ -23,7 +23,7 @@ class DashboardContainer extends React.Component<Props, State> {
   render() {
     const { collapsed } = this.state;
     return (
-      <Layout style={{ minHeight: "100vh", position: "relative" }}>
+      <Layout style={{ maxHeight: "100vh", position: "relative" }}>
         <Sider
           collapsible
           collapsed={this.state.collapsed}
@@ -54,11 +54,7 @@ class DashboardContainer extends React.Component<Props, State> {
           </Menu>
         </Sider>
         <Layout>
-          <Content style={{ margin: "0 16px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
+          <Content>
             <PopularContainer />
           </Content>
         </Layout>
