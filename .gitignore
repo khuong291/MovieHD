@@ -9,6 +9,9 @@
 # production
 /build
 
+# secret keys
+/src/constants/keys.ts
+
 # misc
 .DS_Store
 .env.local
