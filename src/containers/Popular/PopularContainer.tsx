@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card } from "antd";
+import { Card, Rate } from "antd";
 import { getPopular } from "../../apis/movies";
 import { Container, ColWrapper } from "./PopularContainerStyles";
 
@@ -17,6 +17,7 @@ interface PopularMovie {
   title: string;
   voteAverage: number;
   posterPath: string;
+  releaseDate: string;
 }
 
 class PopularContainer extends React.Component<Props, State> {
@@ -32,7 +33,8 @@ class PopularContainer extends React.Component<Props, State> {
         id: e.id,
         title: e.title,
         voteAverage: e.vote_average,
-        posterPath: e.poster_path
+        posterPath: e.poster_path,
+        releaseDate: e.release_date
       })
     );
     this.setState({
@@ -63,7 +65,19 @@ class PopularContainer extends React.Component<Props, State> {
               />
             }
           >
-            <Meta title={popularMovie.title} />
+            <Meta
+              title={popularMovie.title}
+              description={
+                <div>
+                  <Rate
+                    disabled
+                    allowHalf={true}
+                    value={popularMovie.voteAverage / 2}
+                  />
+                  <h4>{popularMovie.releaseDate}</h4>
+                </div>
+              }
+            />
           </Card>
         </ColWrapper>
       )
