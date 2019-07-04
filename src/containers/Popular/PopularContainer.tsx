@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Card, Rate } from "antd";
-import { getPopular } from "../../apis/movies";
-import { Container, ColWrapper } from "./PopularContainerStyles";
+import { getPopular, MovieBasicInfo } from "../../apis/movies";
+import { Container, ColWrapper, CoverWrapper } from "./PopularContainerStyles";
 
 const { Meta } = Card;
 
@@ -9,41 +9,32 @@ type Props = {};
 
 type State = {
   page: number;
-  popularMovies: PopularMovie[];
+  popularMovies: MovieBasicInfo[];
+  selectedMovieId?: number;
 };
-
-interface PopularMovie {
-  id: number;
-  title: string;
-  voteAverage: number;
-  posterPath: string;
-  releaseDate: string;
-}
 
 class PopularContainer extends React.Component<Props, State> {
   state = {
     page: 1,
-    popularMovies: []
+    popularMovies: [],
+    selectedMovieId: undefined
   };
 
   async componentDidMount() {
-    const data = await getPopular(this.state.page);
-    const popularMovies: PopularMovie[] = data.map(
-      (e: any): PopularMovie => ({
-        id: e.id,
-        title: e.title,
-        voteAverage: e.vote_average,
-        posterPath: e.poster_path,
-        releaseDate: e.release_date
-      })
-    );
+    const popularMovies = await getPopular(this.state.page);
     this.setState({
       popularMovies
     });
   }
 
+  onSelectMovie = (movieId: number) => {
+    this.setState({
+      selectedMovieId: movieId
+    });
+  };
+
   renderLoading = () => {
-    return [1, 2, 3, 4].map((_, index: number) => (
+    return [1, 2, 3, 4, 5, 6, 7, 8].map((_, index: number) => (
       <ColWrapper span={6} key={index}>
         <Card style={{ height: 500 }} loading={true} />
       </ColWrapper>
@@ -51,37 +42,40 @@ class PopularContainer extends React.Component<Props, State> {
   };
 
   renderPopularMovies = () => {
-    return this.state.popularMovies.map(
-      (popularMovie: PopularMovie, index: number) => (
-        <ColWrapper span={6} key={index}>
-          <Card
-            bordered
-            hoverable
-            cover={
+    const { popularMovies } = this.state;
+    return popularMovies.map((popularMovie: MovieBasicInfo) => (
+      <ColWrapper span={6} key={popularMovie.id}>
+        <Card
+          onClick={() => this.onSelectMovie(popularMovie.id)}
+          bordered
+          hoverable
+          cover={
+            <CoverWrapper>
               <img
                 src={`https://image.tmdb.org/t/p/w500/${
                   popularMovie.posterPath
                 }`}
+                alt=""
               />
+            </CoverWrapper>
+          }
+        >
+          <Meta
+            title={popularMovie.title}
+            description={
+              <div>
+                <Rate
+                  disabled
+                  allowHalf={true}
+                  value={popularMovie.voteAverage / 2}
+                />
+                <h4>{popularMovie.releaseDate}</h4>
+              </div>
             }
-          >
-            <Meta
-              title={popularMovie.title}
-              description={
-                <div>
-                  <Rate
-                    disabled
-                    allowHalf={true}
-                    value={popularMovie.voteAverage / 2}
-                  />
-                  <h4>{popularMovie.releaseDate}</h4>
-                </div>
-              }
-            />
-          </Card>
-        </ColWrapper>
-      )
-    );
+          />
+        </Card>
+      </ColWrapper>
+    ));
   };
 
   render() {

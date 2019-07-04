@@ -2,8 +2,9 @@ import * as React from "react";
 import { Layout, Menu, Icon } from "antd";
 import Avatar from "./components/Avatar";
 import PopularContainer from "../Popular/PopularContainer";
+import { ContentWrapper } from "./DashboardContainerStyles";
 
-const { Content, Sider } = Layout;
+const { Sider } = Layout;
 
 type Props = {};
 
@@ -54,9 +55,9 @@ class DashboardContainer extends React.Component<Props, State> {
           </Menu>
         </Sider>
         <Layout>
-          <Content>
+          <ContentWrapper>
             <PopularContainer />
-          </Content>
+          </ContentWrapper>
         </Layout>
       </Layout>
     );
