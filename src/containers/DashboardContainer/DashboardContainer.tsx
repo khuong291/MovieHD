@@ -3,22 +3,44 @@ import { Layout, Menu, Icon } from "antd";
 import Avatar from "./components/Avatar";
 import PopularContainer from "../Popular/PopularContainer";
 import { ContentWrapper } from "./DashboardContainerStyles";
+import { SelectParam } from "antd/lib/menu";
+import { RouteComponentProps, withRouter } from "react-router";
 
 const { Sider } = Layout;
 
-type Props = {};
+type Props = RouteComponentProps & {};
 
 type State = {
   collapsed: boolean;
+  selectedKey: string;
 };
 
 class DashboardContainer extends React.Component<Props, State> {
   state = {
-    collapsed: false
+    collapsed: false,
+    selectedKey: "populars"
   };
 
   onCollapse = (collapsed: boolean) => {
     this.setState({ collapsed });
+  };
+
+  renderContent = () => {
+    const { selectedKey } = this.state;
+    switch (selectedKey) {
+      case "populars":
+        return <PopularContainer />;
+      default:
+        return <div>Khuong</div>;
+    }
+  };
+
+  onSelectItem = (selectParam: SelectParam) => {
+    const { history } = this.props;
+    history.push(`/${selectParam.key}`);
+    this.setState({
+      selectedKey: selectParam.key
+    });
   };
 
   render() {
@@ -31,20 +53,25 @@ class DashboardContainer extends React.Component<Props, State> {
           onCollapse={this.onCollapse}
         >
           <Avatar collapsed={collapsed} />
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1">
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={["populars"]}
+            mode="inline"
+            onSelect={this.onSelectItem}
+          >
+            <Menu.Item key="populars">
               <Icon type="star" />
-              <span>Popular</span>
+              <span>Populars</span>
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item key="favorites">
               <Icon type="heart" />
-              <span>Favorite</span>
+              <span>Favorites</span>
             </Menu.Item>
-            <Menu.Item key="3">
+            <Menu.Item key="search">
               <Icon type="search" />
               <span>Search</span>
             </Menu.Item>
-            <Menu.Item key="4">
+            <Menu.Item key="genres">
               <Icon type="table" />
               <span>Genres</span>
             </Menu.Item>
@@ -55,13 +82,11 @@ class DashboardContainer extends React.Component<Props, State> {
           </Menu>
         </Sider>
         <Layout>
-          <ContentWrapper>
-            <PopularContainer />
-          </ContentWrapper>
+          <ContentWrapper>{this.renderContent()}</ContentWrapper>
         </Layout>
       </Layout>
     );
   }
 }
 
-export default DashboardContainer;
+export default withRouter(DashboardContainer);

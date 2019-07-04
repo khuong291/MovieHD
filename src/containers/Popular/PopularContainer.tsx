@@ -52,7 +52,7 @@ class PopularContainer extends React.Component<Props, State> {
           cover={
             <CoverWrapper>
               <img
-                src={`https://image.tmdb.org/t/p/w500/${
+                src={`https://image.tmdb.org/t/p/w300/${
                   popularMovie.posterPath
                 }`}
                 alt=""
