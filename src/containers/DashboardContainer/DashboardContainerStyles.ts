@@ -23,4 +23,5 @@ export const ContentWrapper = styled(Content)`
   height: 100vh;
   background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
     url("https://voxatl.org/wp-content/uploads/2019/03/Screen-Shot-2019-03-14-at-12.26.00-PM.png");
+  background-size: 100% 100%;
 `;

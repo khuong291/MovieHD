@@ -11,6 +11,11 @@ export interface MovieBasicInfo {
   releaseDate: string;
 }
 
+export interface MovieGenre {
+  id: number;
+  name: string;
+}
+
 export const getPopular = async (page: number) => {
   const res = await axios.get(`${MOVIE_BASE_URL}movie/popular`, {
     params: {
@@ -30,4 +35,21 @@ export const getPopular = async (page: number) => {
     })
   );
   return popularMovies;
+};
+
+export const getGenres = async () => {
+  const res = await axios.get(`${MOVIE_BASE_URL}genre/movie/list`, {
+    params: {
+      api_key: API_KEY
+    }
+  });
+  const data = res.data;
+  const genresJSON = data["genres"];
+  const genres: MovieGenre[] = genresJSON.map(
+    (e: any): MovieGenre => ({
+      id: e.id,
+      name: e.name
+    })
+  );
+  return genres;
 };

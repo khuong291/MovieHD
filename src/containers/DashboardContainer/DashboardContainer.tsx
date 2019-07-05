@@ -2,11 +2,20 @@ import * as React from "react";
 import { Layout, Menu, Icon } from "antd";
 import Avatar from "./components/Avatar";
 import PopularContainer from "../Popular/PopularContainer";
+import GenresContainer from "../Genres/GenresContainer";
 import { ContentWrapper } from "./DashboardContainerStyles";
 import { SelectParam } from "antd/lib/menu";
 import { RouteComponentProps, withRouter } from "react-router";
 
 const { Sider } = Layout;
+
+const MenuType = Object.freeze({
+  POPULARS: "populars",
+  FAVORITES: "favorites",
+  SEARCH: "search",
+  GENRES: "genres",
+  LOGOUT: "logout"
+});
 
 type Props = RouteComponentProps & {};
 
@@ -18,7 +27,7 @@ type State = {
 class DashboardContainer extends React.Component<Props, State> {
   state = {
     collapsed: false,
-    selectedKey: "populars"
+    selectedKey: MenuType.POPULARS
   };
 
   onCollapse = (collapsed: boolean) => {
@@ -28,8 +37,10 @@ class DashboardContainer extends React.Component<Props, State> {
   renderContent = () => {
     const { selectedKey } = this.state;
     switch (selectedKey) {
-      case "populars":
+      case MenuType.POPULARS:
         return <PopularContainer />;
+      case MenuType.GENRES:
+        return <GenresContainer />;
       default:
         return <div>Khuong</div>;
     }
@@ -55,27 +66,30 @@ class DashboardContainer extends React.Component<Props, State> {
           <Avatar collapsed={collapsed} />
           <Menu
             theme="dark"
-            defaultSelectedKeys={["populars"]}
+            defaultSelectedKeys={[MenuType.POPULARS]}
             mode="inline"
             onSelect={this.onSelectItem}
           >
-            <Menu.Item key="populars">
+            <Menu.Item key={MenuType.POPULARS}>
               <Icon type="star" />
               <span>Populars</span>
             </Menu.Item>
-            <Menu.Item key="favorites">
+            <Menu.Item key={MenuType.FAVORITES}>
               <Icon type="heart" />
               <span>Favorites</span>
             </Menu.Item>
-            <Menu.Item key="search">
+            <Menu.Item key={MenuType.SEARCH}>
               <Icon type="search" />
               <span>Search</span>
             </Menu.Item>
-            <Menu.Item key="genres">
+            <Menu.Item key={MenuType.GENRES}>
               <Icon type="table" />
               <span>Genres</span>
             </Menu.Item>
-            <Menu.Item key="5" style={{ position: "absolute", bottom: 45 }}>
+            <Menu.Item
+              key={MenuType.LOGOUT}
+              style={{ position: "absolute", bottom: 45 }}
+            >
               <Icon type="poweroff" />
               <span>SIGN OUT</span>
             </Menu.Item>
