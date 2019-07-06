@@ -48,6 +48,10 @@ class DashboardContainer extends React.Component<Props, State> {
 
   onSelectItem = (selectParam: SelectParam) => {
     const { history } = this.props;
+    if ((selectParam.key = MenuType.LOGOUT)) {
+      history.push("/login");
+      return;
+    }
     history.push(`/${selectParam.key}`);
     this.setState({
       selectedKey: selectParam.key

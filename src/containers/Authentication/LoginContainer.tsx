@@ -1,15 +1,20 @@
 import * as React from "react";
 import { Form, Icon, Input, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
+import { login } from "src/apis/auth";
+import { RouteComponentProps, withRouter } from "react-router";
 
-type Props = FormComponentProps;
+type Props = FormComponentProps & RouteComponentProps;
 
 class LoginContainer extends React.Component<Props> {
   handleSubmit = (e: any) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        const status = login(values.username, values.password);
+        if (status) {
+          this.props.history.push("/home");
+        }
       }
     });
   };
@@ -18,6 +23,7 @@ class LoginContainer extends React.Component<Props> {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form
+        autoComplete="off"
         style={{ padding: "10px 20px" }}
         onSubmit={this.handleSubmit}
         className="login-form"
@@ -59,4 +65,4 @@ class LoginContainer extends React.Component<Props> {
 
 export default Form.create({
   name: "normal_login"
-})(LoginContainer);
+})(withRouter(LoginContainer));
