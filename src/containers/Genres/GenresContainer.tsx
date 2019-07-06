@@ -24,7 +24,7 @@ class GenresContainer extends React.Component<Props, State> {
   renderGenres = () => {
     const { genres } = this.state;
     return genres.map((genre: MovieGenre) => (
-      <Button type="primary" key={genre.id} style={{ margin: 10 }}>
+      <Button type="primary" key={genre.id}>
         {genre.name}
       </Button>
     ));
