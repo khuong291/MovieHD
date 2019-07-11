@@ -6,6 +6,8 @@ import GenresContainer from "../Genres/GenresContainer";
 import { ContentWrapper } from "./DashboardContainerStyles";
 import { SelectParam } from "antd/lib/menu";
 import { RouteComponentProps, withRouter } from "react-router";
+import { connect } from "react-redux";
+import { clearUser } from "src/actions/user";
 
 const { Sider } = Layout;
 
@@ -17,7 +19,13 @@ const MenuType = Object.freeze({
   LOGOUT: "logout"
 });
 
-type Props = RouteComponentProps & {};
+const mapDispatchToProps = (dispatch: any) => ({
+  clearUser: () => dispatch(clearUser())
+});
+
+type MapDispatchToProps = ReturnType<typeof mapDispatchToProps>;
+
+type Props = RouteComponentProps & MapDispatchToProps & {};
 
 type State = {
   collapsed: boolean;
@@ -28,6 +36,15 @@ class DashboardContainer extends React.Component<Props, State> {
   state = {
     collapsed: false,
     selectedKey: MenuType.POPULARS
+  };
+
+  componentDidMount() {
+    window.addEventListener("resize", this.resize.bind(this));
+    this.resize();
+  }
+
+  resize = () => {
+    this.setState({ collapsed: window.innerWidth <= 760 });
   };
 
   onCollapse = (collapsed: boolean) => {
@@ -49,7 +66,9 @@ class DashboardContainer extends React.Component<Props, State> {
   onSelectItem = (selectParam: SelectParam) => {
     const { history } = this.props;
     if ((selectParam.key = MenuType.LOGOUT)) {
-      history.push("/login");
+      localStorage.setItem("token", "");
+      this.props.clearUser();
+      history.replace("/login");
       return;
     }
     history.push(`/${selectParam.key}`);
@@ -61,7 +80,7 @@ class DashboardContainer extends React.Component<Props, State> {
   render() {
     const { collapsed } = this.state;
     return (
-      <Layout style={{ maxHeight: "100vh", position: "relative" }}>
+      <Layout style={{ height: "100vh", position: "relative" }}>
         <Sider
           collapsible
           collapsed={this.state.collapsed}
@@ -107,4 +126,7 @@ class DashboardContainer extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(DashboardContainer);
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(withRouter(DashboardContainer));

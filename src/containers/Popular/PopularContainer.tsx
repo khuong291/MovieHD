@@ -44,7 +44,7 @@ class PopularContainer extends React.Component<Props, State> {
   renderPopularMovies = () => {
     const { popularMovies } = this.state;
     return popularMovies.map((popularMovie: MovieBasicInfo) => (
-      <ColWrapper span={6} key={popularMovie.id}>
+      <ColWrapper xs={24} lg={6} key={popularMovie.id}>
         <Card
           onClick={() => this.onSelectMovie(popularMovie.id)}
           bordered

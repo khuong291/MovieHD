@@ -1,15 +1,45 @@
 import * as React from "react";
 import { Form, Icon, Input, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
+import { register } from "src/apis/auth";
+import { connect } from "react-redux";
+import { saveUser } from "src/actions/user";
+import { RouteComponentProps, withRouter } from "react-router";
 
-type Props = FormComponentProps;
+const mapDispatchToProps = (dispatch: any) => ({
+  saveUser
+});
+
+type MapDispatchToProps = ReturnType<typeof mapDispatchToProps>;
+
+type Props = FormComponentProps & MapDispatchToProps & RouteComponentProps;
 
 class SignUpContainer extends React.Component<Props> {
   handleSubmit = (e: any) => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        const user = {
+          name: "Nguyen Van A",
+          age: 20,
+          email: "a@gmail.com",
+          gender: 0,
+          favoriteGenres: [0, 1]
+        };
+        const data = await register(user, "123");
+        const token = data.token;
+        if (token) {
+          localStorage.setItem("token", token);
+          this.props.saveUser({
+            name: "",
+            age: 0,
+            email: "",
+            gender: 0,
+            favoriteGenres: [],
+            token
+          });
+          this.props.history.push("/home");
+        }
       }
     });
   };
@@ -70,6 +100,8 @@ class SignUpContainer extends React.Component<Props> {
   }
 }
 
-export default Form.create({
-  name: "normal_signup"
-})(SignUpContainer);
+export default connect(mapDispatchToProps)(
+  Form.create({
+    name: "normal_signup"
+  })(withRouter(SignUpContainer))
+);
