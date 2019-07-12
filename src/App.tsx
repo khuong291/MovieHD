@@ -3,22 +3,10 @@ import "antd/dist/antd.css";
 import DashboardContainer from "./containers/DashboardContainer/DashboardContainer";
 import AuthenticationContainer from "./containers/Authentication/AuthenticationContainer";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { RootState } from "./reducers/root";
-import { connect } from "react-redux";
 
-const mapStateToProps = (state: RootState) => ({
-  user: state.user
-});
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type Props = StateProps;
-
-class App extends React.Component<Props> {
+class App extends React.Component {
   render() {
-    let token = localStorage.getItem("token");
-    if (this.props.user.token && this.props.user.token !== "") {
-      token = this.props.user.token;
-    }
+    const token = localStorage.getItem("token");
     const loggedIn = token && token !== "";
     return (
       <Switch>
@@ -45,4 +33,4 @@ class App extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(App);
+export default App;

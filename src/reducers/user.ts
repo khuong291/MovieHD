@@ -1,6 +1,5 @@
 export const SAVE_USER = "SAVE_USER";
 export const CLEAR_USER = "CLEAR_USER";
-export const SAVE_TOKEN = "SAVE_TOKEN";
 
 export interface Action {
   type: string;
@@ -14,7 +13,6 @@ export interface User {
   email: string;
   gender: number;
   favoriteGenres: number[];
-  token?: string;
 }
 
 const initialState = {
@@ -23,17 +21,11 @@ const initialState = {
   age: 0,
   email: "",
   gender: 0,
-  favoriteGenres: [],
-  token: undefined
+  favoriteGenres: []
 };
 
 export const user = (state = initialState, action: Action): User => {
   switch (action.type) {
-    case SAVE_TOKEN:
-      return {
-        ...state,
-        token: action.payload.token
-      };
     case SAVE_USER:
       return {
         ...action.payload.user

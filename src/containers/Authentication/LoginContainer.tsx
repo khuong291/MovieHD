@@ -4,10 +4,9 @@ import { FormComponentProps } from "antd/lib/form";
 import { login } from "src/apis/auth";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
-import { saveToken, clearUser } from "../../actions/user";
+import { clearUser } from "../../actions/user";
 
 const mapDispatchToProps = {
-  saveToken,
   clearUser
 };
 
@@ -29,7 +28,6 @@ class LoginContainer extends React.Component<Props> {
         if (status) {
           const token = status.token;
           localStorage.setItem("token", token);
-          this.props.saveToken(token);
           this.props.history.push("/home");
         }
       }

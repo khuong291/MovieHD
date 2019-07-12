@@ -9,6 +9,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
 import { clearUser, saveUser } from "src/actions/user";
 import { getProfile } from "src/apis/auth";
+import { RootState } from "src/reducers/root";
 
 const { Sider } = Layout;
 
@@ -20,14 +21,19 @@ const MenuType = Object.freeze({
   LOGOUT: "logout"
 });
 
+const mapStateToProps = (state: RootState) => ({
+  user: state.user
+});
+
 const mapDispatchToProps = {
   saveUser,
   clearUser
 };
 
+type StateProps = ReturnType<typeof mapStateToProps>;
 type MapDispatchToProps = typeof mapDispatchToProps;
 
-type Props = RouteComponentProps & MapDispatchToProps & {};
+type Props = RouteComponentProps & StateProps & MapDispatchToProps & {};
 
 type State = {
   collapsed: boolean;
@@ -43,7 +49,9 @@ class DashboardContainer extends React.Component<Props, State> {
   async componentDidMount() {
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
-    await getProfile();
+    const user = await getProfile();
+    this.props.saveUser(user);
+    console.log("componentDidMount");
   }
 
   resize = () => {
@@ -130,6 +138,6 @@ class DashboardContainer extends React.Component<Props, State> {
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(withRouter(DashboardContainer));
