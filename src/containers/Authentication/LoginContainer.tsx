@@ -4,33 +4,32 @@ import { FormComponentProps } from "antd/lib/form";
 import { login } from "src/apis/auth";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
-import { saveUser } from "../../actions/user";
+import { saveToken, clearUser } from "../../actions/user";
 
-const mapDispatchToProps = (dispatch: any) => ({
-  saveUser
-});
+const mapDispatchToProps = {
+  saveToken,
+  clearUser
+};
 
-type MapDispatchToProps = ReturnType<typeof mapDispatchToProps>;
+type MapDispatchToProps = typeof mapDispatchToProps;
 
 type Props = FormComponentProps & RouteComponentProps & MapDispatchToProps;
 
 class LoginContainer extends React.Component<Props> {
+  componentDidMount() {
+    localStorage.setItem("token", "");
+    this.props.clearUser();
+  }
+
   handleSubmit = (e: any) => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        const status = login(values.username, values.password);
+        const status = await login("a@gmail.com", "123");
         if (status) {
-          const token = "asdasd";
+          const token = status.token;
           localStorage.setItem("token", token);
-          this.props.saveUser({
-            name: "",
-            age: 0,
-            email: "",
-            gender: 0,
-            favoriteGenres: [],
-            token
-          });
+          this.props.saveToken(token);
           this.props.history.push("/home");
         }
       }

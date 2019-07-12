@@ -3,14 +3,14 @@ import { Form, Icon, Input, Button } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { register } from "src/apis/auth";
 import { connect } from "react-redux";
-import { saveUser } from "src/actions/user";
+import { saveToken } from "src/actions/user";
 import { RouteComponentProps, withRouter } from "react-router";
 
-const mapDispatchToProps = (dispatch: any) => ({
-  saveUser
-});
+const mapDispatchToProps = {
+  saveToken
+};
 
-type MapDispatchToProps = ReturnType<typeof mapDispatchToProps>;
+type MapDispatchToProps = typeof mapDispatchToProps;
 
 type Props = FormComponentProps & MapDispatchToProps & RouteComponentProps;
 
@@ -26,18 +26,18 @@ class SignUpContainer extends React.Component<Props> {
           gender: 0,
           favoriteGenres: [0, 1]
         };
-        const data = await register(user, "123");
+        const data = await register(
+          user.name,
+          user.age,
+          user.email,
+          user.gender,
+          user.favoriteGenres,
+          "123"
+        );
         const token = data.token;
         if (token) {
           localStorage.setItem("token", token);
-          this.props.saveUser({
-            name: "",
-            age: 0,
-            email: "",
-            gender: 0,
-            favoriteGenres: [],
-            token
-          });
+          this.props.saveToken(token);
           this.props.history.push("/home");
         }
       }
@@ -100,7 +100,10 @@ class SignUpContainer extends React.Component<Props> {
   }
 }
 
-export default connect(mapDispatchToProps)(
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(
   Form.create({
     name: "normal_signup"
   })(withRouter(SignUpContainer))

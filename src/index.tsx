@@ -8,7 +8,7 @@ import { reducers } from "./reducers/root";
 import { createBrowserHistory } from "history";
 import { Router as BrowserRouter } from "react-router-dom";
 
-let store = createStore(reducers);
+const store = createStore(reducers);
 
 ReactDOM.render(
   <Provider store={store}>

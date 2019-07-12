@@ -7,7 +7,8 @@ import { ContentWrapper } from "./DashboardContainerStyles";
 import { SelectParam } from "antd/lib/menu";
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
-import { clearUser } from "src/actions/user";
+import { clearUser, saveUser } from "src/actions/user";
+import { getProfile } from "src/apis/auth";
 
 const { Sider } = Layout;
 
@@ -19,11 +20,12 @@ const MenuType = Object.freeze({
   LOGOUT: "logout"
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-  clearUser: () => dispatch(clearUser())
-});
+const mapDispatchToProps = {
+  saveUser,
+  clearUser
+};
 
-type MapDispatchToProps = ReturnType<typeof mapDispatchToProps>;
+type MapDispatchToProps = typeof mapDispatchToProps;
 
 type Props = RouteComponentProps & MapDispatchToProps & {};
 
@@ -38,9 +40,10 @@ class DashboardContainer extends React.Component<Props, State> {
     selectedKey: MenuType.POPULARS
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
+    await getProfile();
   }
 
   resize = () => {
