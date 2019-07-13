@@ -6,23 +6,24 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 class App extends React.Component {
   render() {
-    const token = localStorage.getItem("token");
-    const loggedIn = token && token !== "";
     return (
       <Switch>
         <Route
           exact
           path="/"
           render={() =>
-            loggedIn ? <Redirect to="/home" /> : <Redirect to="/login" />
+            localStorage.getItem("token") ? (
+              <Redirect to="/home" />
+            ) : (
+              <Redirect to="/login" />
+            )
           }
         />
         <Route path="/login" exact component={AuthenticationContainer} />
         <Route
           path="/home"
-          exact
           component={() => {
-            if (loggedIn) {
+            if (localStorage.getItem("token")) {
               return <DashboardContainer />;
             }
             return <Redirect to="/login" />;

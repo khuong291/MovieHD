@@ -5,7 +5,13 @@ import PopularContainer from "../Popular/PopularContainer";
 import GenresContainer from "../Genres/GenresContainer";
 import { ContentWrapper } from "./DashboardContainerStyles";
 import { SelectParam } from "antd/lib/menu";
-import { RouteComponentProps, withRouter } from "react-router";
+import {
+  RouteComponentProps,
+  withRouter,
+  Switch,
+  Route,
+  Redirect
+} from "react-router";
 import { connect } from "react-redux";
 import { clearUser, saveUser } from "src/actions/user";
 import { getProfile } from "src/apis/auth";
@@ -14,10 +20,10 @@ import { RootState } from "src/reducers/root";
 const { Sider } = Layout;
 
 const MenuType = Object.freeze({
-  POPULARS: "populars",
-  FAVORITES: "favorites",
-  SEARCH: "search",
-  GENRES: "genres",
+  POPULARS: "home/populars",
+  FAVORITES: "home/favorites",
+  SEARCH: "home/search",
+  GENRES: "home/genres",
   LOGOUT: "logout"
 });
 
@@ -51,7 +57,6 @@ class DashboardContainer extends React.Component<Props, State> {
     this.resize();
     const user = await getProfile();
     this.props.saveUser(user);
-    console.log("componentDidMount");
   }
 
   resize = () => {
@@ -62,21 +67,9 @@ class DashboardContainer extends React.Component<Props, State> {
     this.setState({ collapsed });
   };
 
-  renderContent = () => {
-    const { selectedKey } = this.state;
-    switch (selectedKey) {
-      case MenuType.POPULARS:
-        return <PopularContainer />;
-      case MenuType.GENRES:
-        return <GenresContainer />;
-      default:
-        return <div>Khuong</div>;
-    }
-  };
-
   onSelectItem = (selectParam: SelectParam) => {
     const { history } = this.props;
-    if ((selectParam.key = MenuType.LOGOUT)) {
+    if (selectParam.key === MenuType.LOGOUT) {
       localStorage.setItem("token", "");
       this.props.clearUser();
       history.replace("/login");
@@ -130,7 +123,27 @@ class DashboardContainer extends React.Component<Props, State> {
           </Menu>
         </Sider>
         <Layout>
-          <ContentWrapper>{this.renderContent()}</ContentWrapper>
+          <ContentWrapper>
+            <Switch>
+              <Route
+                path="/home"
+                exact
+                component={() => <Redirect to="/home/populars" />}
+              />
+              <Route path="/home/populars" exact component={PopularContainer} />
+              <Route
+                path="/home/favorites"
+                exact
+                component={() => <div>favorites</div>}
+              />
+              <Route
+                path="/home/search"
+                exact
+                component={() => <div>search</div>}
+              />
+              <Route path="/home/genres" exact component={GenresContainer} />
+            </Switch>
+          </ContentWrapper>
         </Layout>
       </Layout>
     );

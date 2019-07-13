@@ -25,7 +25,7 @@ class LoginContainer extends React.Component<Props> {
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         const status = await login("a@gmail.com", "123");
-        if (status) {
+        if (status.auth) {
           const token = status.token;
           localStorage.setItem("token", token);
           this.props.history.push("/home");
