@@ -20,6 +20,7 @@ class App extends React.Component {
           }
         />
         <Route path="/login" exact component={AuthenticationContainer} />
+        <Route path="/register" exact component={AuthenticationContainer} />
         <Route
           path="/home"
           component={() => {

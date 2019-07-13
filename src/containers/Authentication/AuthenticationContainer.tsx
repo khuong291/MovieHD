@@ -8,6 +8,7 @@ import {
 import { Tabs } from "antd";
 import LoginContainer from "./LoginContainer";
 import SignUpContainer from "./SignUpContainer";
+import { Link } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -18,12 +19,16 @@ class AuthenticationContainer extends React.Component {
         <ModalWrapper>
           <LeftCol span={12} />
           <RightCol span={12}>
-            <Tabs defaultActiveKey="1">
-              <TabPane tab={<span>Login</span>} key="1">
-                <LoginContainer />
+            <Tabs defaultActiveKey={window.location.pathname}>
+              <TabPane tab={<span>Login</span>} key="/login">
+                <Link to="/login">
+                  <LoginContainer />
+                </Link>
               </TabPane>
-              <TabPane tab={<span>Register</span>} key="2">
-                <SignUpContainer />
+              <TabPane tab={<span>Register</span>} key="/register">
+                <Link to="/register">
+                  <SignUpContainer />
+                </Link>
               </TabPane>
             </Tabs>
           </RightCol>
