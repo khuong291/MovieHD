@@ -44,14 +44,20 @@ class SignUpContainer extends React.Component<Props, State> {
       state.age,
       state.userName,
       state.gender,
-      [],
-      "123"
+      state.favoriteGenres,
+      state.password
     );
     const token = data.token;
     if (token) {
       localStorage.setItem("token", token);
       this.props.history.push("/home");
     }
+  };
+
+  handleChange = (value: number[]) => {
+    this.setState({
+      favoriteGenres: value
+    });
   };
 
   render() {
@@ -108,9 +114,7 @@ class SignUpContainer extends React.Component<Props, State> {
           <Select
             mode="multiple"
             placeholder="Select your favorite genres"
-            onSelect={value => {
-              console.log(value);
-            }}
+            onChange={this.handleChange}
           >
             {this.state.genres.map((genre: MovieGenre) => (
               <Select.Option key={genre.id}>{genre.name}</Select.Option>

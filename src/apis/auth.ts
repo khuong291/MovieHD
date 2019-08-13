@@ -55,5 +55,3 @@ export const getAllUsers = async () => {
   });
   console.log(users);
 };
-
-getAllUsers();
