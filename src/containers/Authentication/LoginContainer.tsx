@@ -40,7 +40,6 @@ class LoginContainer extends React.Component<Props> {
       <Form
         autoComplete="off"
         style={{ padding: "10px 20px" }}
-        onSubmit={this.handleSubmit}
         className="login-form"
       >
         <Form.Item>
@@ -69,6 +68,7 @@ class LoginContainer extends React.Component<Props> {
             type="primary"
             htmlType="submit"
             className="login-form-button"
+            onClick={this.handleSubmit}
           >
             Log in
           </Button>

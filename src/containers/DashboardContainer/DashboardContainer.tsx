@@ -3,6 +3,7 @@ import { Layout, Menu, Icon } from "antd";
 import Avatar from "./components/Avatar";
 import PopularContainer from "../Popular/PopularContainer";
 import GenresContainer from "../Genres/GenresContainer";
+import SearchContainer from "../Search/SearchContainer";
 import { ContentWrapper } from "./DashboardContainerStyles";
 import { SelectParam } from "antd/lib/menu";
 import {
@@ -20,11 +21,12 @@ import { RootState } from "src/reducers/root";
 const { Sider } = Layout;
 
 const MenuType = Object.freeze({
-  POPULARS: "home/populars",
-  FAVORITES: "home/favorites",
-  SEARCH: "home/search",
-  GENRES: "home/genres",
-  LOGOUT: "logout"
+  POPULARS: "/home/populars",
+  FAVORITES: "/home/favorites",
+  SEARCH: "/home/search",
+  GENRES: "/home/genres",
+  USERS: "/home/users",
+  LOGOUT: "/logout"
 });
 
 const mapStateToProps = (state: RootState) => ({
@@ -75,7 +77,7 @@ class DashboardContainer extends React.Component<Props, State> {
       history.replace("/login");
       return;
     }
-    history.push(`/${selectParam.key}`);
+    history.push(`${selectParam.key}`);
     this.setState({
       selectedKey: selectParam.key
     });
@@ -113,6 +115,10 @@ class DashboardContainer extends React.Component<Props, State> {
               <Icon type="table" />
               <span>Genres</span>
             </Menu.Item>
+            <Menu.Item key={MenuType.USERS}>
+              <Icon type="team" />
+              <span>Users</span>
+            </Menu.Item>
             <Menu.Item
               key={MenuType.LOGOUT}
               style={{ position: "absolute", bottom: 45 }}
@@ -128,20 +134,21 @@ class DashboardContainer extends React.Component<Props, State> {
               <Route
                 path="/home"
                 exact
-                component={() => <Redirect to="/home/populars" />}
+                component={() => <Redirect to={MenuType.POPULARS} />}
               />
-              <Route path="/home/populars" exact component={PopularContainer} />
               <Route
-                path="/home/favorites"
+                path={MenuType.POPULARS}
+                exact
+                component={PopularContainer}
+              />
+              <Route
+                path={MenuType.FAVORITES}
                 exact
                 component={() => <div>favorites</div>}
               />
-              <Route
-                path="/home/search"
-                exact
-                component={() => <div>search</div>}
-              />
-              <Route path="/home/genres" exact component={GenresContainer} />
+              <Route path={MenuType.SEARCH} exact component={SearchContainer} />
+              <Route path={MenuType.GENRES} exact component={GenresContainer} />
+              {/* <Route path={MenuType.USERS} exact component={GenresContainer} /> */}
             </Switch>
           </ContentWrapper>
         </Layout>

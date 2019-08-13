@@ -53,3 +53,24 @@ export const getGenres = async () => {
   );
   return genres;
 };
+
+export const searchMovie = async (query: string) => {
+  const res = await axios.get(`${MOVIE_BASE_URL}search/movie`, {
+    params: {
+      api_key: API_KEY,
+      query
+    }
+  });
+  const data = res.data;
+  const results = data["results"];
+  const movies: MovieBasicInfo[] = results.map(
+    (e: any): MovieBasicInfo => ({
+      id: e.id,
+      title: e.title,
+      voteAverage: e.vote_average,
+      posterPath: e.poster_path,
+      releaseDate: e.release_date
+    })
+  );
+  return movies;
+};

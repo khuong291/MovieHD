@@ -45,3 +45,15 @@ export const getProfile = async () => {
   };
   return user;
 };
+
+export const getAllUsers = async () => {
+  const token = localStorage.getItem("token");
+  const users: User[] = await axios.get(`${BASE_URL}users`, {
+    headers: {
+      "x-access-token": token
+    }
+  });
+  console.log(users);
+};
+
+getAllUsers();
