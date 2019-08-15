@@ -2,12 +2,14 @@ import * as React from "react";
 import { Card, Rate } from "antd";
 import { getPopular, MovieBasicInfo } from "../../apis/movies";
 import { Container, ColWrapper, CoverWrapper } from "./PopularContainerStyles";
+import * as InfiniteScroll from "react-infinite-scroller";
 
 const { Meta } = Card;
 
 type Props = {};
 
 type State = {
+  loading: boolean;
   page: number;
   popularMovies: MovieBasicInfo[];
   selectedMovieId?: number;
@@ -15,6 +17,7 @@ type State = {
 
 class PopularContainer extends React.Component<Props, State> {
   state = {
+    loading: false,
     page: 1,
     popularMovies: [],
     selectedMovieId: undefined
@@ -27,6 +30,25 @@ class PopularContainer extends React.Component<Props, State> {
     });
   }
 
+  loadMore = () => {
+    if (this.state.loading) {
+      return;
+    }
+    this.setState(
+      {
+        loading: true,
+        page: this.state.page + 1
+      },
+      async () => {
+        const popularMovies = await getPopular(this.state.page);
+        this.setState({
+          loading: false,
+          popularMovies: [...this.state.popularMovies, ...popularMovies]
+        });
+      }
+    );
+  };
+
   onSelectMovie = (movieId: number) => {
     this.setState({
       selectedMovieId: movieId
@@ -34,7 +56,7 @@ class PopularContainer extends React.Component<Props, State> {
   };
 
   renderLoading = () => {
-    return [1, 2, 3, 4, 5, 6, 7, 8].map((_, index: number) => (
+    return Array(8).map((_, index: number) => (
       <ColWrapper span={6} key={index}>
         <Card style={{ height: 500 }} loading={true} />
       </ColWrapper>
@@ -44,7 +66,7 @@ class PopularContainer extends React.Component<Props, State> {
   renderPopularMovies = () => {
     const { popularMovies } = this.state;
     return popularMovies.map((popularMovie: MovieBasicInfo) => (
-      <ColWrapper xs={24} lg={6} key={popularMovie.id}>
+      <ColWrapper span={6} key={popularMovie.id}>
         <Card
           onClick={() => this.onSelectMovie(popularMovie.id)}
           bordered
@@ -65,9 +87,10 @@ class PopularContainer extends React.Component<Props, State> {
             description={
               <div>
                 <Rate
+                  count={10}
                   disabled
                   allowHalf={true}
-                  value={popularMovie.voteAverage / 2}
+                  value={popularMovie.voteAverage}
                 />
                 <h4>{popularMovie.releaseDate}</h4>
               </div>
@@ -82,9 +105,21 @@ class PopularContainer extends React.Component<Props, State> {
     const { popularMovies } = this.state;
     return (
       <Container gutter={16}>
-        {popularMovies.length === 0
-          ? this.renderLoading()
-          : this.renderPopularMovies()}
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={this.loadMore}
+          hasMore={true || false}
+          loader={
+            <div className="loader" key={0}>
+              Loading ...
+            </div>
+          }
+          useWindow={false}
+        >
+          {popularMovies.length === 0
+            ? this.renderLoading()
+            : this.renderPopularMovies()}
+        </InfiniteScroll>
       </Container>
     );
   }
