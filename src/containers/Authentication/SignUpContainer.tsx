@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, Icon, Input, Button, Select } from "antd";
+import { Form, Icon, Input, Button, Select, message } from "antd";
 import { register } from "src/apis/auth";
 import { RouteComponentProps, withRouter } from "react-router";
 import { MovieGenre } from "src/apis/movies";
@@ -24,20 +24,29 @@ const SignUpContainer: React.SFC<Props> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const submitForm = async () => {
-    setLoading(true);
-    const data = await register(
-      name,
-      age,
-      userName,
-      gender,
-      favoriteGenres,
-      password
-    );
-    setLoading(false);
-    const token = data.token;
-    if (token) {
-      localStorage.setItem("token", token);
-      props.history.push("/home");
+    if (!name || !age || !userName || !gender || !favoriteGenres || !password) {
+      message.warning("Please fill in the fields");
+      return;
+    }
+    try {
+      setLoading(true);
+      const data = await register(
+        name,
+        age,
+        userName,
+        gender,
+        favoriteGenres,
+        password
+      );
+      setLoading(false);
+      const token = data.token;
+      if (token) {
+        localStorage.setItem("token", token);
+        props.history.push("/home");
+      }
+    } catch {
+      setLoading(false);
+      message.error("An error has occurred, please try again");
     }
   };
 

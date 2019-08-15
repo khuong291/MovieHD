@@ -29,7 +29,8 @@ const LoginContainer: React.SFC<Props> = props => {
             props.history.push("/home");
           }
         } catch {
-          message.error("Error");
+          setLoading(false);
+          message.error("An error has occurred, please try again");
         }
       }
     });
