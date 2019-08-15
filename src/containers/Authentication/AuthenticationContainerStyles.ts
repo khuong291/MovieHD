@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Row, Col } from "antd";
 
 export const Container = styled.div`
   height: 100vh;
@@ -12,22 +11,12 @@ export const Container = styled.div`
   text-align: center;
 `;
 
-export const ModalWrapper = styled(Row)`
+export const ModalWrapper = styled.div`
   margin: 0 auto;
-  width: 800px;
-  height: 550px;
+  width: 500px;
+  height: auto;
   display: inline-block;
   background-color: #fff;
-  border: 5px solid #fee;
-  border-radius: 10px;
+  border: 4px solid #49f;
+  border-radius: 4px;
 `;
-
-export const LeftCol = styled(Col)`
-  height: 100%;
-  background-image: url("http://hdqwalls.com/wallpapers/2019-thanos-avengers-endgame-93.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-`;
-
-export const RightCol = styled(Col)``;

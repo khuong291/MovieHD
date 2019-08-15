@@ -9,13 +9,25 @@ export const Container = styled(Row)`
 
 export const ColWrapper = styled(Col)`
   margin-bottom: 16px;
+
+  .CircularProgressbar {
+    margin-right: 10px;
+    height: 45px;
+    width: auto;
+  }
+
+  h4 {
+    font-weight: 400;
+    font-size: 12px;
+    color: gray;
+  }
 `;
 
 export const CoverWrapper = styled.div`
   position: relative;
+  height: 420px;
   img {
-    width: 100%;
-    height: 420px;
+    height: 100%;
     vertical-align: top;
   }
   :after {

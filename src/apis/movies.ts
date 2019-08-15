@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_KEY } from "../constants/keys";
 
-const MOVIE_BASE_URL = "https://api.themoviedb.org/3/";
+export const MOVIE_BASE_URL = "https://api.themoviedb.org/3/";
 
 export interface MovieBasicInfo {
   id: number;
@@ -35,23 +35,6 @@ export const getPopular = async (page: number) => {
     })
   );
   return popularMovies;
-};
-
-export const getGenres = async () => {
-  const res = await axios.get(`${MOVIE_BASE_URL}genre/movie/list`, {
-    params: {
-      api_key: API_KEY
-    }
-  });
-  const data = res.data;
-  const genresJSON = data["genres"];
-  const genres: MovieGenre[] = genresJSON.map(
-    (e: any): MovieGenre => ({
-      id: e.id,
-      name: e.name
-    })
-  );
-  return genres;
 };
 
 export const searchMovie = async (query: string) => {

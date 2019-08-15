@@ -3,16 +3,8 @@ import { Form, Icon, Input, Button, message } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { login } from "src/apis/auth";
 import { RouteComponentProps, withRouter } from "react-router";
-import { connect } from "react-redux";
-import { clearUser } from "../../actions/user";
 
-const mapDispatchToProps = {
-  clearUser
-};
-
-type MapDispatchToProps = typeof mapDispatchToProps;
-
-type Props = FormComponentProps & RouteComponentProps & MapDispatchToProps;
+type Props = FormComponentProps & RouteComponentProps;
 
 type State = {
   userName: string;
@@ -22,7 +14,6 @@ type State = {
 class LoginContainer extends React.Component<Props, State> {
   componentDidMount() {
     localStorage.setItem("token", "");
-    this.props.clearUser();
   }
 
   handleSubmit = (e: any) => {
@@ -98,11 +89,6 @@ class LoginContainer extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  undefined,
-  mapDispatchToProps
-)(
-  Form.create({
-    name: "normal_login"
-  })(withRouter(LoginContainer))
-);
+export default Form.create({
+  name: "normal_login"
+})(withRouter(LoginContainer));

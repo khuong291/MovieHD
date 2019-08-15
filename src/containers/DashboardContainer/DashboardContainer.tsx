@@ -13,10 +13,7 @@ import {
   Route,
   Redirect
 } from "react-router";
-import { connect } from "react-redux";
-import { clearUser, saveUser } from "src/actions/user";
-import { getProfile } from "src/apis/auth";
-import { RootState } from "src/reducers/root";
+import { getProfile, User } from "src/apis/auth";
 
 const { Sider } = Layout;
 
@@ -29,36 +26,26 @@ const MenuType = Object.freeze({
   LOGOUT: "/logout"
 });
 
-const mapStateToProps = (state: RootState) => ({
-  user: state.user
-});
-
-const mapDispatchToProps = {
-  saveUser,
-  clearUser
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type MapDispatchToProps = typeof mapDispatchToProps;
-
-type Props = RouteComponentProps & StateProps & MapDispatchToProps & {};
+type Props = RouteComponentProps;
 
 type State = {
   collapsed: boolean;
   selectedKey: string;
+  user?: User;
 };
 
 class DashboardContainer extends React.Component<Props, State> {
   state = {
     collapsed: false,
-    selectedKey: MenuType.POPULARS
+    selectedKey: MenuType.POPULARS,
+    user: undefined
   };
 
   async componentDidMount() {
-    window.addEventListener("resize", this.resize.bind(this));
-    this.resize();
     const user = await getProfile();
-    this.props.saveUser(user);
+    this.setState({
+      user
+    });
   }
 
   resize = () => {
@@ -73,7 +60,6 @@ class DashboardContainer extends React.Component<Props, State> {
     const { history } = this.props;
     if (selectParam.key === MenuType.LOGOUT) {
       localStorage.setItem("token", "");
-      this.props.clearUser();
       history.replace("/login");
       return;
     }
@@ -84,7 +70,7 @@ class DashboardContainer extends React.Component<Props, State> {
   };
 
   render() {
-    const { collapsed } = this.state;
+    const { collapsed, user } = this.state;
     return (
       <Layout style={{ height: "100vh", position: "relative" }}>
         <Sider
@@ -92,7 +78,7 @@ class DashboardContainer extends React.Component<Props, State> {
           collapsed={this.state.collapsed}
           onCollapse={this.onCollapse}
         >
-          <Avatar collapsed={collapsed} />
+          <Avatar collapsed={collapsed} user={user} />
           <Menu
             theme="dark"
             defaultSelectedKeys={[MenuType.POPULARS]}
@@ -157,7 +143,4 @@ class DashboardContainer extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(DashboardContainer));
+export default withRouter(DashboardContainer);

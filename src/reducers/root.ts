@@ -1,10 +1,11 @@
-import { User, user } from "./user";
 import { combineReducers } from "redux";
+import { MovieGenre } from "src/apis/movies";
+import { genres } from "./genres";
 
 export interface RootState {
-  user: User;
+  genres: MovieGenre[];
 }
 
 export const reducers = combineReducers({
-  user
+  genres
 });

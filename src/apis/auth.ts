@@ -1,5 +1,13 @@
 import axios from "axios";
-import { User } from "src/reducers/user";
+
+export interface User {
+  id: string;
+  name: string;
+  age: number;
+  email: string;
+  gender: number;
+  favoriteGenres: number[];
+}
 
 const BASE_URL = "https://radiant-dusk-57430.herokuapp.com/";
 

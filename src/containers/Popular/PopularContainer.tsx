@@ -1,8 +1,11 @@
 import * as React from "react";
-import { Card, Rate } from "antd";
+import { Card } from "antd";
 import { getPopular, MovieBasicInfo } from "../../apis/movies";
 import { Container, ColWrapper, CoverWrapper } from "./PopularContainerStyles";
 import * as InfiniteScroll from "react-infinite-scroller";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import * as moment from "moment";
 
 const { Meta } = Card;
 
@@ -63,6 +66,20 @@ class PopularContainer extends React.Component<Props, State> {
     ));
   };
 
+  getPathColor = (voteAverage: number) => {
+    if (voteAverage > 7) {
+      return `rgba(46, 204, 113, ${voteAverage / 10})`;
+    } else if (voteAverage > 5) {
+      return `rgba(255, 195, 0, ${voteAverage / 10})`;
+    } else {
+      return `rgba(169, 50, 38, ${voteAverage / 10})`;
+    }
+  };
+
+  formatDate = (releaseDate: string) => {
+    return moment(releaseDate, "YYYY-MM-DD").format("MMM DD, YYYY");
+  };
+
   renderPopularMovies = () => {
     const { popularMovies } = this.state;
     return popularMovies.map((popularMovie: MovieBasicInfo) => (
@@ -83,16 +100,26 @@ class PopularContainer extends React.Component<Props, State> {
           }
         >
           <Meta
-            title={popularMovie.title}
+            title={
+              <div style={{ textAlign: "left" }}>
+                <CircularProgressbar
+                  styles={buildStyles({
+                    strokeLinecap: "round",
+                    textSize: "19px",
+                    pathColor: this.getPathColor(popularMovie.voteAverage),
+                    textColor: "#000",
+                    trailColor: "#d6d6d6"
+                  })}
+                  value={popularMovie.voteAverage / 10}
+                  maxValue={1}
+                  text={`${popularMovie.voteAverage * 10}%`}
+                />
+                {popularMovie.title}
+              </div>
+            }
             description={
               <div>
-                <Rate
-                  count={10}
-                  disabled
-                  allowHalf={true}
-                  value={popularMovie.voteAverage}
-                />
-                <h4>{popularMovie.releaseDate}</h4>
+                <h4>{this.formatDate(popularMovie.releaseDate)}</h4>
               </div>
             }
           />

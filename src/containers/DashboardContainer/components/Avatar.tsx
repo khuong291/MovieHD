@@ -1,23 +1,17 @@
 import * as React from "react";
 import { AvatarBox } from "../DashboardContainerStyles";
-import { RootState } from "src/reducers/root";
-import { connect } from "react-redux";
+import { User } from "src/apis/auth";
 
-const mapStateToProps = (state: RootState) => ({
-  user: state.user
-});
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-
-type Props = StateProps & {
+type Props = {
+  user?: User;
   collapsed: boolean;
 };
 
 const Avatar: React.SFC<Props> = props => (
   <AvatarBox>
     <img src="https://hairstyles.thehairstyler.com/hairstyle_views/front_view_images/10536/original/Chris-Evans.jpg" />
-    {!props.collapsed && <h4>{props.user.name}</h4>}
+    {!props.collapsed && <h4>{props.user && props.user.name}</h4>}
   </AvatarBox>
 );
 
-export default connect(mapStateToProps)(Avatar);
+export default Avatar;
