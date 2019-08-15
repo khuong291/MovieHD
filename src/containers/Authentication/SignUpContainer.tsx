@@ -21,8 +21,10 @@ const SignUpContainer: React.SFC<Props> = props => {
   const [gender, setGender] = React.useState<number>(0);
   const [favoriteGenres, setFavoriteGenres] = React.useState<number[]>([]);
   const [password, setPassword] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const submitForm = async () => {
+    setLoading(true);
     const data = await register(
       name,
       age,
@@ -31,6 +33,7 @@ const SignUpContainer: React.SFC<Props> = props => {
       favoriteGenres,
       password
     );
+    setLoading(false);
     const token = data.token;
     if (token) {
       localStorage.setItem("token", token);
@@ -105,6 +108,7 @@ const SignUpContainer: React.SFC<Props> = props => {
           type="primary"
           htmlType="submit"
           className="login-form-button"
+          loading={loading}
           onClick={submitForm}
         >
           Sign Up
