@@ -4,6 +4,7 @@ import Avatar from "./components/Avatar";
 import PopularContainer from "../Popular/PopularContainer";
 import GenresContainer from "../Genres/GenresContainer";
 import SearchContainer from "../Search/SearchContainer";
+import MovieDetailContainer from "../MovieDetail/MovieDetailContainer";
 import { ContentWrapper } from "./DashboardContainerStyles";
 import { SelectParam } from "antd/lib/menu";
 import {
@@ -19,6 +20,7 @@ const { Sider } = Layout;
 
 const MenuType = Object.freeze({
   POPULARS: "/home/populars",
+  POPULARS_DETAIL: "/home/populars/:id",
   FAVORITES: "/home/favorites",
   SEARCH: "/home/search",
   GENRES: "/home/genres",
@@ -126,6 +128,11 @@ class DashboardContainer extends React.Component<Props, State> {
                 path={MenuType.POPULARS}
                 exact
                 component={PopularContainer}
+              />
+              <Route
+                path={MenuType.POPULARS_DETAIL}
+                exact
+                component={MovieDetailContainer}
               />
               <Route
                 path={MenuType.FAVORITES}

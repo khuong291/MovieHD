@@ -5,9 +5,10 @@ import { Container, ColWrapper, CoverWrapper } from "./PopularContainerStyles";
 import * as InfiniteScroll from "react-infinite-scroller";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import * as moment from "moment";
 import { RootState } from "src/reducers/root";
 import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router";
+import { getPathColor, formatDate } from "src/utils/movie";
 
 const { Meta } = Card;
 
@@ -17,21 +18,19 @@ const mapStateToProps = (state: RootState) => ({
 
 type MapStateToProps = ReturnType<typeof mapStateToProps>;
 
-type Props = MapStateToProps;
+type Props = MapStateToProps & RouteComponentProps;
 
 type State = {
   loading: boolean;
   page: number;
   popularMovies: MovieBasicInfo[];
-  selectedMovieId?: number;
 };
 
 class PopularContainer extends React.Component<Props, State> {
   state = {
     loading: false,
     page: 1,
-    popularMovies: [],
-    selectedMovieId: undefined
+    popularMovies: []
   };
 
   async componentDidMount() {
@@ -42,7 +41,7 @@ class PopularContainer extends React.Component<Props, State> {
   }
 
   loadMore = () => {
-    if (this.state.loading) {
+    if (this.state.loading || this.state.popularMovies.length === 0) {
       return;
     }
     this.setState(
@@ -60,32 +59,12 @@ class PopularContainer extends React.Component<Props, State> {
     );
   };
 
-  onSelectMovie = (movieId: number) => {
-    this.setState({
-      selectedMovieId: movieId
-    });
-  };
-
   renderLoading = () => {
     return Array(8).map((_, index: number) => (
       <ColWrapper span={6} key={index}>
         <Card style={{ height: 500 }} loading={true} />
       </ColWrapper>
     ));
-  };
-
-  getPathColor = (voteAverage: number) => {
-    if (voteAverage > 7) {
-      return `rgba(46, 204, 113, ${voteAverage / 10})`;
-    } else if (voteAverage > 5) {
-      return `rgba(255, 195, 0, ${voteAverage / 10})`;
-    } else {
-      return `rgba(169, 50, 38, ${voteAverage / 10})`;
-    }
-  };
-
-  formatDate = (releaseDate: string) => {
-    return moment(releaseDate, "YYYY-MM-DD").format("MMM DD, YYYY");
   };
 
   renderGenres = (genreIds: number[]) => {
@@ -107,7 +86,12 @@ class PopularContainer extends React.Component<Props, State> {
     return popularMovies.map((popularMovie: MovieBasicInfo) => (
       <ColWrapper span={6} key={popularMovie.id}>
         <Card
-          onClick={() => this.onSelectMovie(popularMovie.id)}
+          onClick={() => {
+            console.log(this.props.location.pathname);
+            this.props.history.push(
+              `${this.props.location.pathname}/${popularMovie.id}`
+            );
+          }}
           bordered
           hoverable
           cover={
@@ -128,9 +112,10 @@ class PopularContainer extends React.Component<Props, State> {
                   styles={buildStyles({
                     strokeLinecap: "round",
                     textSize: "19px",
-                    pathColor: this.getPathColor(popularMovie.voteAverage),
+                    pathColor: getPathColor(popularMovie.voteAverage),
                     textColor: "#000",
-                    trailColor: "#d6d6d6"
+                    trailColor: "#d6d6d6",
+                    backgroundColor: "#000"
                   })}
                   value={popularMovie.voteAverage / 10}
                   maxValue={1}
@@ -141,7 +126,7 @@ class PopularContainer extends React.Component<Props, State> {
             }
             description={
               <div>
-                <h4>{this.formatDate(popularMovie.releaseDate)}</h4>
+                <h4>{formatDate(popularMovie.releaseDate)}</h4>
                 {this.renderGenres(popularMovie.genreIds)}
               </div>
             }
@@ -159,7 +144,11 @@ class PopularContainer extends React.Component<Props, State> {
           pageStart={0}
           loadMore={this.loadMore}
           hasMore={true || false}
-          loader={<div style={{ color: "green" }}>Loading ...</div>}
+          loader={
+            <div key={0} style={{ color: "green" }}>
+              Loading ...
+            </div>
+          }
           useWindow={false}
         >
           {popularMovies.length === 0
@@ -171,4 +160,6 @@ class PopularContainer extends React.Component<Props, State> {
   }
 }
 
-export default connect<MapStateToProps>(mapStateToProps)(PopularContainer);
+export default connect<MapStateToProps>(mapStateToProps)(
+  withRouter(PopularContainer)
+);

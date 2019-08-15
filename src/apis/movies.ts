@@ -12,6 +12,12 @@ export interface MovieBasicInfo {
   genreIds: number[];
 }
 
+export interface MovieDetail extends MovieBasicInfo {
+  runtime: number;
+  genres: MovieGenre[];
+  backdropPath: string;
+}
+
 export interface MovieGenre {
   id: number;
   name: string;
@@ -59,4 +65,25 @@ export const searchMovie = async (query: string) => {
     })
   );
   return movies;
+};
+
+export const getMovieDetail = async (movieId: number) => {
+  const res = await axios.get(`${MOVIE_BASE_URL}movie/${movieId}`, {
+    params: {
+      api_key: API_KEY
+    }
+  });
+  const data = res.data;
+  const movieDetail = {
+    id: data.id,
+    title: data.title,
+    voteAverage: data.vote_average,
+    posterPath: data.poster_path,
+    releaseDate: data.release_date,
+    genreIds: [],
+    genres: data.genres,
+    runtime: data.runtime,
+    backdropPath: data.backdrop_path
+  };
+  return movieDetail;
 };
