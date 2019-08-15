@@ -1,15 +1,23 @@
 import * as React from "react";
-import { Card } from "antd";
-import { getPopular, MovieBasicInfo } from "../../apis/movies";
+import { Card, Tag } from "antd";
+import { getPopular, MovieBasicInfo, MovieGenre } from "../../apis/movies";
 import { Container, ColWrapper, CoverWrapper } from "./PopularContainerStyles";
 import * as InfiniteScroll from "react-infinite-scroller";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import * as moment from "moment";
+import { RootState } from "src/reducers/root";
+import { connect } from "react-redux";
 
 const { Meta } = Card;
 
-type Props = {};
+const mapStateToProps = (state: RootState) => ({
+  genres: state.genres
+});
+
+type MapStateToProps = ReturnType<typeof mapStateToProps>;
+
+type Props = MapStateToProps;
 
 type State = {
   loading: boolean;
@@ -80,6 +88,20 @@ class PopularContainer extends React.Component<Props, State> {
     return moment(releaseDate, "YYYY-MM-DD").format("MMM DD, YYYY");
   };
 
+  renderGenres = (genreIds: number[]) => {
+    let tags: JSX.Element[] = [];
+    genreIds.map((id: number) => {
+      this.props.genres.forEach((genre: MovieGenre) => {
+        if (genre.id === id) {
+          const tag = <Tag>{genre.name}</Tag>;
+          tags.push(tag);
+        }
+        return;
+      });
+    });
+    return <div style={{ height: 60 }}>{tags}</div>;
+  };
+
   renderPopularMovies = () => {
     const { popularMovies } = this.state;
     return popularMovies.map((popularMovie: MovieBasicInfo) => (
@@ -120,6 +142,7 @@ class PopularContainer extends React.Component<Props, State> {
             description={
               <div>
                 <h4>{this.formatDate(popularMovie.releaseDate)}</h4>
+                {this.renderGenres(popularMovie.genreIds)}
               </div>
             }
           />
@@ -136,11 +159,7 @@ class PopularContainer extends React.Component<Props, State> {
           pageStart={0}
           loadMore={this.loadMore}
           hasMore={true || false}
-          loader={
-            <div className="loader" key={0}>
-              Loading ...
-            </div>
-          }
+          loader={<div style={{ color: "green" }}>Loading ...</div>}
           useWindow={false}
         >
           {popularMovies.length === 0
@@ -152,4 +171,4 @@ class PopularContainer extends React.Component<Props, State> {
   }
 }
 
-export default PopularContainer;
+export default connect<MapStateToProps>(mapStateToProps)(PopularContainer);

@@ -24,7 +24,14 @@ const SignUpContainer: React.SFC<Props> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const submitForm = async () => {
-    if (!name || !age || !userName || !gender || !favoriteGenres || !password) {
+    if (
+      !name ||
+      !age ||
+      !userName ||
+      gender === undefined ||
+      !favoriteGenres ||
+      !password
+    ) {
       message.warning("Please fill in the fields");
       return;
     }

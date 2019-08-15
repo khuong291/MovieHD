@@ -9,6 +9,7 @@ export interface MovieBasicInfo {
   voteAverage: number;
   posterPath: string;
   releaseDate: string;
+  genreIds: number[];
 }
 
 export interface MovieGenre {
@@ -31,7 +32,8 @@ export const getPopular = async (page: number) => {
       title: e.title,
       voteAverage: e.vote_average,
       posterPath: e.poster_path,
-      releaseDate: e.release_date
+      releaseDate: e.release_date,
+      genreIds: e.genre_ids
     })
   );
   return popularMovies;
@@ -52,7 +54,8 @@ export const searchMovie = async (query: string) => {
       title: e.title,
       voteAverage: e.vote_average,
       posterPath: e.poster_path,
-      releaseDate: e.release_date
+      releaseDate: e.release_date,
+      genreIds: e.genre_ids
     })
   );
   return movies;

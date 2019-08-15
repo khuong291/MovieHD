@@ -16,6 +16,10 @@ export const ColWrapper = styled(Col)`
     width: auto;
   }
 
+  .ant-tag {
+    margin-bottom: 5px;
+  }
+
   h4 {
     font-weight: 400;
     font-size: 12px;
@@ -27,7 +31,9 @@ export const CoverWrapper = styled.div`
   position: relative;
   height: 420px;
   img {
+    object-fit: cover;
     height: 100%;
+    width: 100%;
     vertical-align: top;
   }
   :after {

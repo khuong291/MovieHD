@@ -77,7 +77,7 @@ class SearchContainer extends React.Component<Props, State> {
         <Search
           placeholder="Search your movie..."
           onSearch={this.search}
-          style={{ width: 200 }}
+          style={{ width: 200, margin: "20px auto" }}
         />
         <Container gutter={16}>
           {movies.length === 0 ? <div>Empty</div> : this.renderMovies()}
