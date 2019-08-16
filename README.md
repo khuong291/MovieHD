@@ -16,3 +16,7 @@ Discover movies from TheMovieDB. Sign up and make friends with others.
 - NodeJS
 - Express
 - MongoDB
+
+\*\*Demo
+
+- https://khuong291.github.io/MovieHD
