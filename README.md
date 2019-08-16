@@ -9,6 +9,7 @@ Discover movies from TheMovieDB. Sign up and make friends with others.
 - Styled Component
 - Redux
 - Redux Thunk
+- React Router
 - Antd
 
 **Back-end Technologies:**
@@ -16,5 +17,6 @@ Discover movies from TheMovieDB. Sign up and make friends with others.
 - NodeJS
 - Express
 - MongoDB
+- Mongoose
 
 https://khuong291.github.io/MovieHD
