@@ -103,3 +103,26 @@ export const getMovieVideos = async (movieId: number) => {
   }
   return undefined;
 };
+
+export const getMoviesFromGenre = async (page: number, genreId: number) => {
+  const res = await axios.get(`${MOVIE_BASE_URL}discover/movie`, {
+    params: {
+      api_key: API_KEY,
+      page,
+      with_genres: genreId
+    }
+  });
+  const data = res.data;
+  const results = data["results"];
+  const movies: MovieBasicInfo[] = results.map(
+    (e: any): MovieBasicInfo => ({
+      id: e.id,
+      title: e.title,
+      voteAverage: e.vote_average,
+      posterPath: e.poster_path,
+      releaseDate: e.release_date,
+      genreIds: e.genre_ids
+    })
+  );
+  return movies;
+};

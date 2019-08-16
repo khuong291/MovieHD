@@ -22,7 +22,9 @@ const MenuType = Object.freeze({
   POPULARS: "/home/populars",
   POPULARS_DETAIL: "/home/populars/:id",
   SEARCH: "/home/search",
+  SEARCH_DETAIL: "/home/search/:id",
   GENRES: "/home/genres",
+  GENRES_DETAIL: "/home/genres/:id",
   USERS: "/home/users",
   LOGOUT: "/logout"
 });
@@ -129,9 +131,18 @@ class DashboardContainer extends React.Component<Props, State> {
                 exact
                 component={MovieDetailContainer}
               />
+              <Route
+                path={MenuType.SEARCH_DETAIL}
+                exact
+                component={MovieDetailContainer}
+              />
+              <Route
+                path={MenuType.GENRES_DETAIL}
+                exact
+                component={MovieDetailContainer}
+              />
               <Route path={MenuType.SEARCH} exact component={SearchContainer} />
               <Route path={MenuType.GENRES} exact component={GenresContainer} />
-              {/* <Route path={MenuType.USERS} exact component={GenresContainer} /> */}
             </Switch>
           </ContentWrapper>
         </Layout>

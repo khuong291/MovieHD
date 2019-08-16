@@ -11,12 +11,12 @@ const AuthenticationContainer = () => (
   <Container>
     <ModalWrapper>
       <Tabs defaultActiveKey={window.location.pathname}>
-        <TabPane tab={<span>Login</span>} key="/login">
+        <TabPane tab={<span>Login</span>} key="/MovieHD/login">
           <Link to="/login">
             <LoginContainer />
           </Link>
         </TabPane>
-        <TabPane tab={<span>Register</span>} key="/register">
+        <TabPane tab={<span>Register</span>} key="/MovieHD/register">
           <Link to="/register">
             <SignUpContainer />
           </Link>

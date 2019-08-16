@@ -67,12 +67,12 @@ class PopularContainer extends React.Component<Props, State> {
     ));
   };
 
-  renderGenres = (genreIds: number[]) => {
+  renderGenres = (genreIds: number[], genres: MovieGenre[]) => {
     let tags: JSX.Element[] = [];
     genreIds.map((id: number) => {
-      this.props.genres.forEach((genre: MovieGenre) => {
+      genres.forEach((genre: MovieGenre) => {
         if (genre.id === id) {
-          const tag = <Tag>{genre.name}</Tag>;
+          const tag = <Tag key={genre.id}>{genre.name}</Tag>;
           tags.push(tag);
         }
         return;
@@ -87,7 +87,6 @@ class PopularContainer extends React.Component<Props, State> {
       <ColWrapper span={6} key={popularMovie.id}>
         <Card
           onClick={() => {
-            console.log(this.props.location.pathname);
             this.props.history.push(
               `${this.props.location.pathname}/${popularMovie.id}`
             );
@@ -127,7 +126,7 @@ class PopularContainer extends React.Component<Props, State> {
             description={
               <div>
                 <h4>{formatDate(popularMovie.releaseDate)}</h4>
-                {this.renderGenres(popularMovie.genreIds)}
+                {this.renderGenres(popularMovie.genreIds, this.props.genres)}
               </div>
             }
           />

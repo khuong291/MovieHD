@@ -1,29 +1,38 @@
 import * as React from "react";
-import { Card, Rate, Input } from "antd";
-import { MovieBasicInfo, searchMovie } from "../../apis/movies";
+import { Card, Input, Tag } from "antd";
+import { MovieBasicInfo, searchMovie, MovieGenre } from "../../apis/movies";
 import {
   Container,
   ColWrapper,
   CoverWrapper
 } from "../Popular/PopularContainerStyles";
+import { RouteComponentProps, withRouter } from "react-router";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import { getPathColor, formatDate } from "src/utils/movie";
+import { RootState } from "src/reducers/root";
+import { connect } from "react-redux";
 
 const { Search } = Input;
 
 const { Meta } = Card;
 
-type Props = {};
+const mapStateToProps = (state: RootState) => ({
+  genres: state.genres
+});
+
+type MapStateToProps = ReturnType<typeof mapStateToProps>;
+
+type Props = MapStateToProps & RouteComponentProps;
 
 type State = {
   page: number;
   movies: MovieBasicInfo[];
-  selectedMovieId?: number;
 };
 
 class SearchContainer extends React.Component<Props, State> {
   state = {
     page: 1,
-    movies: [],
-    selectedMovieId: undefined
+    movies: []
   };
 
   search = async (query: string) => {
@@ -33,18 +42,30 @@ class SearchContainer extends React.Component<Props, State> {
     });
   };
 
-  onSelectMovie = (movieId: number) => {
-    this.setState({
-      selectedMovieId: movieId
+  renderGenres = (genreIds: number[], genres: MovieGenre[]) => {
+    let tags: JSX.Element[] = [];
+    genreIds.map((id: number) => {
+      genres.forEach((genre: MovieGenre) => {
+        if (genre.id === id) {
+          const tag = <Tag key={genre.id}>{genre.name}</Tag>;
+          tags.push(tag);
+        }
+        return;
+      });
     });
+    return <div style={{ height: 60 }}>{tags}</div>;
   };
 
   renderMovies = () => {
     const { movies } = this.state;
     return movies.map((movie: MovieBasicInfo) => (
-      <ColWrapper xs={24} lg={6} key={movie.id}>
+      <ColWrapper span={6} key={movie.id}>
         <Card
-          onClick={() => this.onSelectMovie(movie.id)}
+          onClick={() =>
+            this.props.history.push(
+              `${this.props.location.pathname}/${movie.id}`
+            )
+          }
           bordered
           hoverable
           cover={
@@ -57,11 +78,28 @@ class SearchContainer extends React.Component<Props, State> {
           }
         >
           <Meta
-            title={movie.title}
+            title={
+              <div style={{ textAlign: "left" }}>
+                <CircularProgressbar
+                  styles={buildStyles({
+                    strokeLinecap: "round",
+                    textSize: "19px",
+                    pathColor: getPathColor(movie.voteAverage),
+                    textColor: "#000",
+                    trailColor: "#d6d6d6",
+                    backgroundColor: "#000"
+                  })}
+                  value={movie.voteAverage / 10}
+                  maxValue={1}
+                  text={`${movie.voteAverage * 10}%`}
+                />
+                {movie.title}
+              </div>
+            }
             description={
               <div>
-                <Rate disabled allowHalf={true} value={movie.voteAverage / 2} />
-                <h4>{movie.releaseDate}</h4>
+                <h4>{formatDate(movie.releaseDate)}</h4>
+                {this.renderGenres(movie.genreIds, this.props.genres)}
               </div>
             }
           />
@@ -73,18 +111,18 @@ class SearchContainer extends React.Component<Props, State> {
   render() {
     const { movies } = this.state;
     return (
-      <>
+      <Container gutter={16}>
         <Search
           placeholder="Search your movie..."
           onSearch={this.search}
-          style={{ width: 200, margin: "20px auto" }}
+          style={{ margin: "-30px 0 30px" }}
         />
-        <Container gutter={16}>
-          {movies.length === 0 ? <div>Empty</div> : this.renderMovies()}
-        </Container>
-      </>
+        {movies.length === 0 ? <div>Empty</div> : this.renderMovies()}
+      </Container>
     );
   }
 }
 
-export default SearchContainer;
+export default connect<MapStateToProps>(mapStateToProps)(
+  withRouter(SearchContainer)
+);
