@@ -1,93 +1,90 @@
-// import * as React from "react";
-// import { Card, Rate } from "antd";
-// import { getPopular, MovieBasicInfo } from "../../apis/movies";
-// import { Container, ColWrapper, CoverWrapper } from "./PopularContainerStyles";
+import * as React from "react";
+import { Table, Tag } from "antd";
+import { Container } from "../Popular/PopularContainerStyles";
+import { User, getAllUsers } from "src/apis/auth";
+import { RootState } from "src/reducers/root";
+import { MovieGenre } from "src/apis/movies";
+import { connect } from "react-redux";
 
-// const { Meta } = Card;
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name"
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age"
+  },
+  {
+    title: "Gender",
+    dataIndex: "gender",
+    key: "gender",
+    render: (gender: number) => <span>{gender === 0 ? "Male" : "Female"}</span>
+  }
+];
 
-// type Props = {};
+const mapStateToProps = (state: RootState) => ({
+  genres: state.genres
+});
 
-// type State = {
-//   page: number;
-//   popularMovies: MovieBasicInfo[];
-//   selectedMovieId?: number;
-// };
+type MapStateToProps = ReturnType<typeof mapStateToProps>;
 
-// class PopularContainer extends React.Component<Props, State> {
-//   state = {
-//     page: 1,
-//     popularMovies: [],
-//     selectedMovieId: undefined
-//   };
+type Props = MapStateToProps;
 
-//   async componentDidMount() {
-//     const popularMovies = await getPopular(this.state.page);
-//     this.setState({
-//       popularMovies
-//     });
-//   }
+type State = {
+  users: User[];
+};
 
-//   onSelectMovie = (movieId: number) => {
-//     this.setState({
-//       selectedMovieId: movieId
-//     });
-//   };
+class PopularContainer extends React.Component<Props, State> {
+  state = {
+    users: []
+  };
 
-//   renderLoading = () => {
-//     return [1, 2, 3, 4, 5, 6, 7, 8].map((_, index: number) => (
-//       <ColWrapper span={6} key={index}>
-//         <Card style={{ height: 500 }} loading={true} />
-//       </ColWrapper>
-//     ));
-//   };
+  async componentDidMount() {
+    const users = await getAllUsers();
+    this.setState({
+      users
+    });
+  }
 
-//   renderPopularMovies = () => {
-//     const { popularMovies } = this.state;
-//     return popularMovies.map((popularMovie: MovieBasicInfo) => (
-//       <ColWrapper xs={24} lg={6} key={popularMovie.id}>
-//         <Card
-//           onClick={() => this.onSelectMovie(popularMovie.id)}
-//           bordered
-//           hoverable
-//           cover={
-//             <CoverWrapper>
-//               <img
-//                 src={`https://image.tmdb.org/t/p/w300/${
-//                   popularMovie.posterPath
-//                 }`}
-//                 alt=""
-//               />
-//             </CoverWrapper>
-//           }
-//         >
-//           <Meta
-//             title={popularMovie.title}
-//             description={
-//               <div>
-//                 <Rate
-//                   disabled
-//                   allowHalf={true}
-//                   value={popularMovie.voteAverage / 2}
-//                 />
-//                 <h4>{popularMovie.releaseDate}</h4>
-//               </div>
-//             }
-//           />
-//         </Card>
-//       </ColWrapper>
-//     ));
-//   };
+  renderGenres = (user: User, genres: MovieGenre[]) => {
+    let tags: JSX.Element[] = [];
+    user.favoriteGenres.map((id: number) => {
+      genres.forEach((genre: MovieGenre) => {
+        if (genre.id === id) {
+          const tag = <Tag key={genre.id}>{genre.name}</Tag>;
+          tags.push(tag);
+        }
+        return;
+      });
+    });
+    return (
+      <div key={user.id} style={{ height: 60 }}>
+        {tags}
+      </div>
+    );
+  };
 
-//   render() {
-//     const { popularMovies } = this.state;
-//     return (
-//       <Container gutter={16}>
-//         {popularMovies.length === 0
-//           ? this.renderLoading()
-//           : this.renderPopularMovies()}
-//       </Container>
-//     );
-//   }
-// }
+  render() {
+    return (
+      <Container>
+        <Table
+          dataSource={this.state.users}
+          loading={this.state.users.length === 0}
+          columns={[
+            ...columns,
+            {
+              title: "Favorite Genres",
+              render: (user: User) => this.renderGenres(user, this.props.genres)
+            }
+          ]}
+        />
+        ;
+      </Container>
+    );
+  }
+}
 
-// export default PopularContainer;
+export default connect<MapStateToProps>(mapStateToProps)(PopularContainer);

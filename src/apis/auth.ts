@@ -56,10 +56,11 @@ export const getProfile = async () => {
 
 export const getAllUsers = async () => {
   const token = localStorage.getItem("token");
-  const users: User[] = await axios.get(`${BASE_URL}users`, {
+  const res = await axios.get(`${BASE_URL}users`, {
     headers: {
       "x-access-token": token
     }
   });
-  console.log(users);
+  const users = res.data;
+  return users;
 };

@@ -4,6 +4,7 @@ import Avatar from "./components/Avatar";
 import PopularContainer from "../Popular/PopularContainer";
 import GenresContainer from "../Genres/GenresContainer";
 import SearchContainer from "../Search/SearchContainer";
+import UsersContainer from "../Users/UsersContainer";
 import MovieDetailContainer from "../MovieDetail/MovieDetailContainer";
 import { ContentWrapper } from "./DashboardContainerStyles";
 import { SelectParam } from "antd/lib/menu";
@@ -143,6 +144,7 @@ class DashboardContainer extends React.Component<Props, State> {
               />
               <Route path={MenuType.SEARCH} exact component={SearchContainer} />
               <Route path={MenuType.GENRES} exact component={GenresContainer} />
+              <Route path={MenuType.USERS} exact component={UsersContainer} />
             </Switch>
           </ContentWrapper>
         </Layout>
