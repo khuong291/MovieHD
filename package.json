@@ -2,6 +2,7 @@
   "name": "movie-hd",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://khuong291.github.io/MovieHD",
   "dependencies": {
     "@types/node": "^12.0.10",
     "@types/react": "^16.8.22",
@@ -29,10 +30,14 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.2",
+    "gh-pages": "^1.1.0",
+    "react-scripts": "1.0.7"
   }
 }
