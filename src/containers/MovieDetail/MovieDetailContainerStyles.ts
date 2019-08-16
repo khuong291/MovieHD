@@ -23,6 +23,18 @@ export const ContentWrapper = styled.div`
     color: white;
   }
 
+  h2 {
+    font-weight: 18;
+    font-size: 24px;
+    color: white;
+  }
+
+  h3 {
+    font-weight: 400;
+    font-size: 16px;
+    color: white;
+  }
+
   span {
     font-size: 30px;
     font-weight: 400;

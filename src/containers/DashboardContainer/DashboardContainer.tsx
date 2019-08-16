@@ -21,7 +21,6 @@ const { Sider } = Layout;
 const MenuType = Object.freeze({
   POPULARS: "/home/populars",
   POPULARS_DETAIL: "/home/populars/:id",
-  FAVORITES: "/home/favorites",
   SEARCH: "/home/search",
   GENRES: "/home/genres",
   USERS: "/home/users",
@@ -91,10 +90,6 @@ class DashboardContainer extends React.Component<Props, State> {
               <Icon type="star" />
               <span>Populars</span>
             </Menu.Item>
-            <Menu.Item key={MenuType.FAVORITES}>
-              <Icon type="heart" />
-              <span>Favorites</span>
-            </Menu.Item>
             <Menu.Item key={MenuType.SEARCH}>
               <Icon type="search" />
               <span>Search</span>
@@ -133,11 +128,6 @@ class DashboardContainer extends React.Component<Props, State> {
                 path={MenuType.POPULARS_DETAIL}
                 exact
                 component={MovieDetailContainer}
-              />
-              <Route
-                path={MenuType.FAVORITES}
-                exact
-                component={() => <div>favorites</div>}
               />
               <Route path={MenuType.SEARCH} exact component={SearchContainer} />
               <Route path={MenuType.GENRES} exact component={GenresContainer} />

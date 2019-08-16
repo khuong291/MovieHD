@@ -16,6 +16,7 @@ export interface MovieDetail extends MovieBasicInfo {
   runtime: number;
   genres: MovieGenre[];
   backdropPath: string;
+  overview: string;
 }
 
 export interface MovieGenre {
@@ -83,7 +84,22 @@ export const getMovieDetail = async (movieId: number) => {
     genreIds: [],
     genres: data.genres,
     runtime: data.runtime,
-    backdropPath: data.backdrop_path
+    backdropPath: data.backdrop_path,
+    overview: data.overview
   };
   return movieDetail;
+};
+
+export const getMovieVideos = async (movieId: number) => {
+  const res = await axios.get(`${MOVIE_BASE_URL}movie/${movieId}/videos`, {
+    params: {
+      api_key: API_KEY
+    }
+  });
+  const data = res.data;
+  const results = data["results"];
+  if (results && results.length > 0) {
+    return results[0].key;
+  }
+  return undefined;
 };
